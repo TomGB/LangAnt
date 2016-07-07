@@ -1,0 +1,68 @@
+<canvas id="canvas" width="400" height="400"></canvas>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+var canvas = $("canvas")[0]
+var g = canvas.getContext('2d')
+
+var array = new Array()
+
+for (var i = 0; i < 100; i++) {
+  array[i] = new Array()
+  for (var j = 0; j < 100; j++) {
+    array[i][j] = 0
+  }
+}
+array[50][50]=1
+
+var posX = 50, posY = 50, dir = 0
+var oldPosX = 50, oldPosY = 50, dir = 0
+// requestAnimationFrame(animate)
+setInterval(animate, 1);
+
+function animate(){
+  if(array[posX][posY] == 1){
+    dir ++
+  }else{
+    dir --
+  }
+
+  if(dir < 0){
+    dir+=4
+  }
+  if(dir > 3){
+    dir-=4
+  }
+
+  if(dir == 0){
+    posX--
+  }else if (dir == 1) {
+    posY--
+  }else if (dir == 2) {
+    posX++
+  }else if (dir == 3) {
+    posY++
+  }
+
+  array[posX][posY] -=1
+
+  if(array[posX][posY] < 0){
+    array[posX][posY]+=2
+  }
+  if(array[posX][posY]){
+    g.fillStyle = "black";
+  }else{
+    g.fillStyle = "white";
+  }
+
+  g.fillRect(posX*4,posY*4,1*4,1*4)
+  if(array[oldPosX][oldPosY]){
+    g.fillStyle = "black";
+  }else{
+    g.fillStyle = "white";
+  }
+  g.fillRect(oldPosX*4,oldPosY*4,1*4,1*4)
+  oldPosX = posX;
+  oldPoxY = posY;
+  // requestAnimationFrame(animate)
+}
+</script>
