@@ -1,30 +1,88 @@
-<canvas id="canvas" width="400" height="400"></canvas>
+<canvas id="canvas" width="800" height="800"></canvas>
+<input type="text" name="name" value="" class="input">
+<input type="button" name="name" value="Set new instructions" class="new">
+<input type="range" name="name" value="" min="1" max="10000" class="skipInput">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript">
+
+"use strict"
+
+var instructions = new Array(1,-1);
+
+$(".new").click(function () {
+
+  instructions = new Array();
+
+  var input = $(".input").val();
+  for (var i = 0; i < input.length; i++) {
+    if(input[i] == "L"||input[i]=='l'){
+      instructions.push(-1);
+    }else{
+      instructions.push(1);
+    }
+  }
+
+  console.log(instructions);
+
+  reset(instructions)
+});
+
+$(".skipInput").on("input change",function () {
+  skip = $(this).val();
+});
+
 var canvas = $("canvas")[0]
 var g = canvas.getContext('2d')
+// g.imageSmoothingEnabled = true;
 
-var array = new Array()
+if (window.devicePixelRatio > 1) {
+    var canvasWidth = canvas.width;
+    var canvasHeight = canvas.height;
 
-for (var i = 0; i < 100; i++) {
-  array[i] = new Array()
-  for (var j = 0; j < 100; j++) {
-    array[i][j] = 0
-  }
+    canvas.width = canvasWidth * window.devicePixelRatio;
+    canvas.height = canvasHeight * window.devicePixelRatio;
+    canvas.style.width = canvasWidth;
+    canvas.style.height = canvasHeight;
+
+    g.scale(window.devicePixelRatio, window.devicePixelRatio);
 }
-array[50][50]=1
 
-var posX = 50, posY = 50, dir = 0
-var oldPosX = 50, oldPosY = 50, dir = 0
-// requestAnimationFrame(animate)
-setInterval(animate, 1);
+var end = false;
+var current = 0;
+var skip = 100
+var posX = 400, posY = 400, dir = 0
+var oldPosX = 400, oldPosY = 400
+var array = new Array()
+reset(instructions);
 
-function animate(){
-  if(array[posX][posY] == 1){
-    dir ++
-  }else{
-    dir --
+
+
+function reset(instructions) {
+  end = false;
+  skip = 1000;
+  current = 0;
+
+  g.clearRect(0,0,canvas.width,canvas.height);
+
+  array = new Array()
+
+  for (var i = 0; i < 800; i++) {
+    array[i] = new Array()
+    for (var j = 0; j < 800; j++) {
+      array[i][j] = 0
+    }
   }
+  // array[400][400]=1
+
+  posX = 400, posY = 400, dir = 0
+  oldPosX = 400, oldPosY = 400
+  requestAnimationFrame(mainLoop)
+}
+
+function update() {
+  // console.log("hi");
+  current++;
+  dir += instructions[array[posX][posY]];
 
   if(dir < 0){
     dir+=4
@@ -34,35 +92,47 @@ function animate(){
   }
 
   if(dir == 0){
-    posX--
-  }else if (dir == 1) {
     posY--
+  }else if (dir == 1) {
+    posX--
   }else if (dir == 2) {
-    posX++
-  }else if (dir == 3) {
     posY++
+  }else if (dir == 3) {
+    posX++
   }
 
-  array[posX][posY] -=1
-
-  if(array[posX][posY] < 0){
-    array[posX][posY]+=2
-  }
-  if(array[posX][posY]){
-    g.fillStyle = "black";
+  if(posX < 0 || posX >= 800 || posY < 0 || posY >= 800){
+    end = true;
   }else{
-    g.fillStyle = "white";
-  }
+    array[oldPosX][oldPosY] +=1
 
-  g.fillRect(posX*4,posY*4,1*4,1*4)
-  if(array[oldPosX][oldPosY]){
-    g.fillStyle = "black";
-  }else{
-    g.fillStyle = "white";
+    if(array[oldPosX][oldPosY] == instructions.length){
+      array[oldPosX][oldPosY]-=instructions.length
+    }
+
+    var shade = array[posX][posY]*255/(instructions.length-1);
+    shade = parseInt(shade);
+    g.fillStyle = 'rgb('+shade+','+shade+','+shade+')';
+    // console.log(shade);
+
+    g.fillRect(parseInt(posX)+0.5,parseInt(posY)+0.5,1,1);
+    var shade = array[oldPosX][oldPosY]*255/(instructions.length-1);
+    shade = parseInt(shade);
+    g.fillStyle = 'rgb('+shade+','+shade+','+shade+')';
+    // console.log(g.fillStyle);
+    g.fillRect(parseInt(oldPosX)+0.5,parseInt(oldPosY)+0.5,1,1);
+    oldPosX = posX;
+    oldPosY = posY;
+    // requestAnimationFrame(animate)
   }
-  g.fillRect(oldPosX*4,oldPosY*4,1*4,1*4)
-  oldPosX = posX;
-  oldPoxY = posY;
-  // requestAnimationFrame(animate)
 }
+
+function mainLoop() {
+  do{
+    update();
+  }while(current%skip != 0);
+  if(!end) requestAnimationFrame(mainLoop)
+}
+
+requestAnimationFrame(mainLoop);
 </script>
