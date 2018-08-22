@@ -1,0 +1,24 @@
+{
+  "name": "langtons-ant-canvas",
+  "version": "1.0.0",
+  "description": "A Javascript implementation of Langtons Ant for HTML 5 Canvas",
+  "main": "src/main.js",
+  "scripts": {
+    "build": "browserify ./src/main.js -o ./build/bundle.js",
+    "watch": "watchify ./src/main.js -o ./build/bundle.js -v --debug",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomGB/LangAnt.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomGB/LangAnt/issues"
+  },
+  "homepage": "https://github.com/TomGB/LangAnt#readme",
+  "devDependencies": {
+    "watchify": "^3.11.0"
+  }
+}
