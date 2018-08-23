@@ -2,9 +2,6 @@ const DEFAULT_INSTRUCTIONS = new Array(1, -1);
 const DEFAULT_FRAME_SKIP = 10000;
 const DEFAULT_MAP = new Array()
 
-const canvas = document.getElementById('canvas');
-const g = canvas.getContext('2d');
-
 const simulation = {
   hasEnded: false,
   currentStep: 0,
@@ -32,10 +29,6 @@ const resetAnt = () => {
 }
 
 simulation.mapSpaces = new Array();
-
-const newButton = document.getElementsByClassName('new')[0];
-const instructionsInputButton = document.getElementsByClassName('input')[0];
-const skipInputButton = document.getElementsByClassName('skipInput')[0];
 
 const newSimulation = () => {
   simulation.hasEnded = false;
@@ -112,23 +105,4 @@ const mainLoop = () => {
 }
 
 requestAnimationFrame(mainLoop);
-
-newButton.addEventListener('click', () => {
-  simulation.instructions = new Array();
-
-  const newInstructions = instructionsInputButton.value.split('');
-
-  newInstructions.map(item => {
-    const direction = (['l','L'].includes(item)) ? -1 : 1;
-    simulation.instructions.push(direction);
-  })
-
-  console.log(simulation.instructions);
-  newSimulation();
-});
-
-skipInputButton.addEventListener('input change', () => {
-  simulation.framesToSkip = skipInputButton.value;
-});
-
 newSimulation();
