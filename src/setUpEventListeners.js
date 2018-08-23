@@ -1,32 +1,30 @@
-const setUpEventListeners = (instructions) => {
-    const canvas = document.getElementById('canvas');
-    const g = canvas.getContext('2d');
-
+const setUpEventListeners = (simulation) => {
     const newButton = document.getElementsByClassName('new')[0];
     const instructionsInputButton = document.getElementsByClassName('input')[0];
     const skipInputButton = document.getElementsByClassName('skipInput')[0];
 
     const procesInstructionsInput = () => {
-        instructions = new Array();
+        const newInstructions = instructionsInputButton
+            .value
+            .split('')
+            .map(item =>
+                ['l','L'].includes(item) ? -1 : 1
+            );
     
-        const newInstructions = instructionsInputButton.value.split('');
-    
-        newInstructions.map(item => {
-            const direction = (['l','L'].includes(item)) ? -1 : 1;
-            instructions.push(direction);
-        })
-    
-        console.log(instructions);
+        console.log(newInstructions);
 
-        return instructions;
+        simulation.setInstructions(newInstructions);
     }
 
     newButton.addEventListener('click', procesInstructionsInput);
   
-    skipInputButton.addEventListener('input change', () => {
+    const setFrameSkipListener = () => {
         simulation.framesToSkip = skipInputButton.value;
-    });
-  
+        console.log(simulation.getInstructions());
+    };
+
+    skipInputButton.addEventListener('input', setFrameSkipListener);
+    skipInputButton.addEventListener('change', setFrameSkipListener);
 }
 
 module.exports = setUpEventListeners;
