@@ -1,26 +1,25 @@
-const setUpEventListeners = (simulation) => {
-    const newButton = document.getElementsByClassName('new')[0];
-    const instructionsInputButton = document.getElementsByClassName('input')[0];
+const setUpEventListeners = (simulation, newSimulation) => {
+    const readInstructionsButton = document.getElementsByClassName('new')[0];
+    const instructionsInputArea = document.getElementsByClassName('input')[0];
     const skipInputButton = document.getElementsByClassName('skipInput')[0];
 
     const procesInstructionsInput = () => {
-        const newInstructions = instructionsInputButton
+        const instructions = instructionsInputArea
             .value
             .split('')
             .map(item =>
                 ['l','L'].includes(item) ? -1 : 1
             );
     
-        console.log(newInstructions);
+        console.log(instructions);
 
-        simulation.setInstructions(newInstructions);
+        newSimulation(instructions);
     }
 
-    newButton.addEventListener('click', procesInstructionsInput);
+    readInstructionsButton.addEventListener('click', procesInstructionsInput);
   
     const setFrameSkipListener = () => {
         simulation.framesToSkip = skipInputButton.value;
-        console.log(simulation.getInstructions());
     };
 
     skipInputButton.addEventListener('input', setFrameSkipListener);

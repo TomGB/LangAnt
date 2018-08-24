@@ -1,9 +1,8 @@
 const DEFAULT_INSTRUCTIONS = [1, -1];
-const DEFAULT_FRAME_SKIP = 1000;
+const DEFAULT_FRAME_SKIP = 10;
 
 class Simulation {
-    constructor({ 
-        width, height }) {
+    constructor({ width, height }, instructions = DEFAULT_INSTRUCTIONS) {
         this.map = {
             width,
             height,
@@ -11,7 +10,7 @@ class Simulation {
         };
         this.hasEnded = false;
         this.currentStep = 0;
-        this.instructions = DEFAULT_INSTRUCTIONS;
+        this.instructions = instructions;
         this.framesToSkip = DEFAULT_FRAME_SKIP;
         this.ant = {
             posX: width / 2,
@@ -42,8 +41,6 @@ class Simulation {
     }
 
     _rotateAnt() {
-        console.log(this.ant);
-        
         const currentLocationInstructions = this.map.state[this.ant.posX][this.ant.posY];
         this.ant.direction += this.instructions[currentLocationInstructions];
     }
@@ -57,7 +54,7 @@ class Simulation {
         }
     }
 
-    _moveBasedOnDirection() {
+    _moveBasedOnDirection() {        
         const [dx, dy] = this.ant.movements[this.ant.direction];
         this.ant.posX += dx;
         this.ant.posY += dy;
@@ -73,11 +70,8 @@ class Simulation {
       
         if (newState === this.instructions.length) {
             newState -= this.instructions.length;
-        }
+        }        
 
-        console.log(newState);
-        
-      
         this.map.state[this.ant.oldPosX][this.ant.oldPosY] = newState;
     }
 
